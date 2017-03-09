@@ -1,6 +1,7 @@
 # Project 6 - *Fiestagram*
 
 **Fiestagram** is a photo sharing app using Parse as its backend.
+No real party inside. Simply an Instagram clone. With lots of confetti.
 
 Time spent: **1** hours spent in total
 
