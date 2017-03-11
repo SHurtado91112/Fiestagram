@@ -1,0 +1,28 @@
+PODS:
+  - Bolts/Tasks (1.8.4)
+  - Parse (1.14.2):
+    - Bolts/Tasks (~> 1.8)
+  - SAConfettiView (0.1.8)
+
+DEPENDENCIES:
+  - Parse
+  - SAConfettiView (from `https://github.com/gokhanakkurt/SAConfettiView`, branch `swift3`)
+
+EXTERNAL SOURCES:
+  SAConfettiView:
+    :branch: swift3
+    :git: https://github.com/gokhanakkurt/SAConfettiView
+
+CHECKOUT OPTIONS:
+  SAConfettiView:
+    :commit: ad562197a289cd2ce231effabe705fb6e00fadec
+    :git: https://github.com/gokhanakkurt/SAConfettiView
+
+SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
+
+PODFILE CHECKSUM: ceb7db9c808fff9615a1f7c15891643c8a6f9a66
+
+COCOAPODS: 1.1.1
