@@ -22,11 +22,14 @@ class TimeLineViewController: UIViewController, UITableViewDelegate, UITableView
     
     var confettiView = SAConfettiView()
     
+    override func viewDidAppear(_ animated: Bool)
+    {
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "LietoMe", size: 32)!]
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "LietoMe", size: 32)!]
         
         self.confettiView = SAConfettiView(frame: self.view.bounds)
         

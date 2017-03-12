@@ -326,6 +326,9 @@
                                 <state key="normal" title="Camera" image="Screenshot-50">
                                     <color key="titleColor" red="0.22501023470000001" green="0.050100001009999999" blue="0.16927745089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="cameraPressed:" destination="rJY-vP-Y2i" eventType="touchUpInside" id="FoW-LQ-Vg6"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="From" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="US9-lL-NR8">
                                 <rect key="frame" x="16" y="239" width="343" height="29"/>

@@ -31,6 +31,8 @@
 	<string>This app would like to use your gallery to upload photo data for your Fiestagram account.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app would like to use your camera to upload photo data for your Fiestagram account.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIAppFonts</key>

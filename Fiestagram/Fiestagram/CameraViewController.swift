@@ -43,12 +43,25 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
         print("Image Picked (delegated)")
         
         // Get the image captured by the UIImagePickerController
-        let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage
+        {
+            // Dismiss UIImagePickerController to go back to your original view controller
+            dismiss(animated: true, completion: nil)
+            
+            self.performSegue(withIdentifier: "imageDetailSegue", sender: editedImage)
+        }
+        else
+        {
+            let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            
+            // Dismiss UIImagePickerController to go back to your original view controller
+            dismiss(animated: true, completion: nil)
+            
+            self.performSegue(withIdentifier: "imageDetailSegue", sender: originalImage)
+        }
         
-        // Dismiss UIImagePickerController to go back to your original view controller
-        dismiss(animated: true, completion: nil)
         
-        self.performSegue(withIdentifier: "imageDetailSegue", sender: editedImage)
+        
     }
     
     override func didReceiveMemoryWarning()
@@ -61,6 +74,17 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     {
         vc.sourceType = UIImagePickerControllerSourceType.photoLibrary
 
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @IBAction func cameraPressed(_ sender: Any)
+    {
+        print("Camera button pressed.")
+        
+        vc.sourceType = UIImagePickerControllerSourceType.camera
+        
+        vc.allowsEditing = false
+        
         self.present(vc, animated: true, completion: nil)
     }
     
