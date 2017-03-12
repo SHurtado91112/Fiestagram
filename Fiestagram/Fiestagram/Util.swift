@@ -124,10 +124,34 @@ extension UIColor
         return UIColor(red: 95.0/255.0, green: 95.0/255.0, blue: 95.0/255.0, alpha: 1)
     }
     
+    static var myFiestaDeepPurple: UIColor
+    {
+        //390D2B
+        return UIColor(red: 57.0/255.0, green: 13.0/255.0, blue: 43.0/255.0, alpha: 1)
+    }
+    
+    static var myInstaPurpleViolet: UIColor
+    {
+        //8a3ab9
+        return UIColor(red: 138.0/255.0, green: 58.0/255.0, blue: 185.0/255.0, alpha: 1)
+    }
+    
     static var myInstaRedViolet: UIColor
     {
         //BC2A8D
         return UIColor(red: 188.0/255.0, green: 42.0/255.0, blue: 141.0/255.0, alpha: 1)
+    }
+    
+    static var myInstaMaroon: UIColor
+    {
+        //cd486b
+        return UIColor(red: 205.0/255.0, green: 72.0/255.0, blue: 107.0/255.0, alpha: 1)
+    }
+    
+    static var myInstaYellow: UIColor
+    {
+        //fccc63
+        return UIColor(red: 252.0/255.0, green: 204.0/255.0, blue: 99.0/255.0, alpha: 1)
     }
     
     //langua colors

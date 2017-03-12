@@ -23,6 +23,9 @@
 		28F50B091E736BDB00FAFF6A /* PublishViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B081E736BDB00FAFF6A /* PublishViewController.swift */; };
 		28F50B0B1E737BBB00FAFF6A /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B0A1E737BBB00FAFF6A /* TimeLineViewController.swift */; };
 		28F50B0D1E7380BF00FAFF6A /* TimeLineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B0C1E7380BF00FAFF6A /* TimeLineCell.swift */; };
+		28F50B0F1E73CF6E00FAFF6A /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B0E1E73CF6E00FAFF6A /* HeaderCell.swift */; };
+		28F50B151E744E1000FAFF6A /* ProfCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B141E744E1000FAFF6A /* ProfCell.swift */; };
+		28F50B171E74873700FAFF6A /* ImageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F50B161E74873700FAFF6A /* ImageDetailViewController.swift */; };
 		A225149CD40A3B449DDA2210 /* Pods_Fiestagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A219F85BD29FB40DE21E6E0B /* Pods_Fiestagram.framework */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +48,9 @@
 		28F50B081E736BDB00FAFF6A /* PublishViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishViewController.swift; sourceTree = "<group>"; };
 		28F50B0A1E737BBB00FAFF6A /* TimeLineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
 		28F50B0C1E7380BF00FAFF6A /* TimeLineCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineCell.swift; sourceTree = "<group>"; };
+		28F50B0E1E73CF6E00FAFF6A /* HeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
+		28F50B141E744E1000FAFF6A /* ProfCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfCell.swift; sourceTree = "<group>"; };
+		28F50B161E74873700FAFF6A /* ImageDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDetailViewController.swift; sourceTree = "<group>"; };
 		55CB04F20271E58A2086C6EC /* Pods-Fiestagram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fiestagram.release.xcconfig"; path = "Pods/Target Support Files/Pods-Fiestagram/Pods-Fiestagram.release.xcconfig"; sourceTree = "<group>"; };
 		94EA62DF1AAEFE74F18CB86A /* Pods-Fiestagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Fiestagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Fiestagram/Pods-Fiestagram.debug.xcconfig"; sourceTree = "<group>"; };
 		A219F85BD29FB40DE21E6E0B /* Pods_Fiestagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fiestagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,16 +98,12 @@
 			isa = PBXGroup;
 			children = (
 				28C733C81E71BFC50046F9D7 /* AppDelegate.swift */,
-				28C733DC1E71D0FA0046F9D7 /* SignInViewController.swift */,
-				28C733DE1E71D4CC0046F9D7 /* SplashViewController.swift */,
-				28F50B0A1E737BBB00FAFF6A /* TimeLineViewController.swift */,
-				28C733E41E73160A0046F9D7 /* ProfileViewController.swift */,
-				28F50B0C1E7380BF00FAFF6A /* TimeLineCell.swift */,
-				28C733E61E731E080046F9D7 /* PopViewController.swift */,
-				28C733E91E7325B30046F9D7 /* CameraViewController.swift */,
-				28F50B061E73698C00FAFF6A /* EditImageViewController.swift */,
-				28F50B081E736BDB00FAFF6A /* PublishViewController.swift */,
 				28C733DA1E71CC780046F9D7 /* Util.swift */,
+				28F50B161E74873700FAFF6A /* ImageDetailViewController.swift */,
+				28F50B101E744BA400FAFF6A /* SignIn */,
+				28F50B111E744BB200FAFF6A /* TimeLine */,
+				28F50B121E744BC400FAFF6A /* Profile */,
+				28F50B131E744BCE00FAFF6A /* Camera */,
 				28C733CC1E71BFC50046F9D7 /* Main.storyboard */,
 				28C733CF1E71BFC50046F9D7 /* Assets.xcassets */,
 				28C733D11E71BFC50046F9D7 /* LaunchScreen.storyboard */,
@@ -110,6 +112,45 @@
 				28C733D41E71BFC50046F9D7 /* Info.plist */,
 			);
 			path = Fiestagram;
+			sourceTree = "<group>";
+		};
+		28F50B101E744BA400FAFF6A /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				28C733DC1E71D0FA0046F9D7 /* SignInViewController.swift */,
+				28C733DE1E71D4CC0046F9D7 /* SplashViewController.swift */,
+			);
+			name = SignIn;
+			sourceTree = "<group>";
+		};
+		28F50B111E744BB200FAFF6A /* TimeLine */ = {
+			isa = PBXGroup;
+			children = (
+				28F50B0A1E737BBB00FAFF6A /* TimeLineViewController.swift */,
+				28F50B0C1E7380BF00FAFF6A /* TimeLineCell.swift */,
+				28F50B0E1E73CF6E00FAFF6A /* HeaderCell.swift */,
+			);
+			name = TimeLine;
+			sourceTree = "<group>";
+		};
+		28F50B121E744BC400FAFF6A /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				28C733E61E731E080046F9D7 /* PopViewController.swift */,
+				28C733E41E73160A0046F9D7 /* ProfileViewController.swift */,
+				28F50B141E744E1000FAFF6A /* ProfCell.swift */,
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
+		28F50B131E744BCE00FAFF6A /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				28C733E91E7325B30046F9D7 /* CameraViewController.swift */,
+				28F50B061E73698C00FAFF6A /* EditImageViewController.swift */,
+				28F50B081E736BDB00FAFF6A /* PublishViewController.swift */,
+			);
+			name = Camera;
 			sourceTree = "<group>";
 		};
 		F8F7125F236C358E5E60EB48 /* Pods */ = {
@@ -251,9 +292,12 @@
 				28F50B071E73698C00FAFF6A /* EditImageViewController.swift in Sources */,
 				28C733DB1E71CC780046F9D7 /* Util.swift in Sources */,
 				28C733C91E71BFC50046F9D7 /* AppDelegate.swift in Sources */,
+				28F50B151E744E1000FAFF6A /* ProfCell.swift in Sources */,
+				28F50B0F1E73CF6E00FAFF6A /* HeaderCell.swift in Sources */,
 				28F50B0B1E737BBB00FAFF6A /* TimeLineViewController.swift in Sources */,
 				28C733E71E731E080046F9D7 /* PopViewController.swift in Sources */,
 				28C733E51E73160A0046F9D7 /* ProfileViewController.swift in Sources */,
+				28F50B171E74873700FAFF6A /* ImageDetailViewController.swift in Sources */,
 				28C733EA1E7325B30046F9D7 /* CameraViewController.swift in Sources */,
 				28C733DD1E71D0FA0046F9D7 /* SignInViewController.swift in Sources */,
 				28C733DF1E71D4CC0046F9D7 /* SplashViewController.swift in Sources */,

@@ -16,8 +16,6 @@ class TimeLineCell: UITableViewCell
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var likeBtn: UIButton!
-    @IBOutlet weak var timeLabel: UILabel!
-    @IBOutlet weak var cellContentView: UIView!
     
     override func awakeFromNib()
     {

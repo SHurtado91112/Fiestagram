@@ -1,10 +1,12 @@
 PODS:
   - Bolts/Tasks (1.8.4)
+  - NVActivityIndicatorView (3.0)
   - Parse (1.14.2):
     - Bolts/Tasks (~> 1.8)
   - SAConfettiView (0.1.8)
 
 DEPENDENCIES:
+  - NVActivityIndicatorView (~> 3.0)
   - Parse
   - SAConfettiView (from `https://github.com/gokhanakkurt/SAConfettiView`, branch `swift3`)
 
@@ -20,9 +22,10 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  NVActivityIndicatorView: 81953b5e65093ba79edf4fe7268e002039ca5268
   Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
   SAConfettiView: c87031a2280659261b730fce3669fb10e73636ee
 
-PODFILE CHECKSUM: ceb7db9c808fff9615a1f7c15891643c8a6f9a66
+PODFILE CHECKSUM: f1dfe9bff8cb897b7442158d2e72a840cbb2bf83
 
 COCOAPODS: 1.1.1

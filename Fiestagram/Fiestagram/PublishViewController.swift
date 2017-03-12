@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import NVActivityIndicatorView
 
 class PublishViewController: UIViewController
 {
@@ -36,6 +37,19 @@ class PublishViewController: UIViewController
     @IBAction func publishPressed(_ sender: Any)
     {
         
+        let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballGridBeat, color: UIColor.myInstaRedViolet, padding: 0.0)
+        
+        
+        actInd.frame = CGRect(x: 0, y: 0, width: self.view.frame.width/2, height: self.view.frame.width/2)
+            
+        actInd.center = self.view.center
+        
+        self.view.addSubview(actInd)
+        
+        self.view.bringSubview(toFront: actInd)
+        
+        actInd.startAnimating()
+        
         if(self.publishImageView.image != nil && self.captionLabel.text != "")
         {
             
@@ -43,19 +57,24 @@ class PublishViewController: UIViewController
                 if(error != nil)
                 {
                     print(error?.localizedDescription)
-                    
-//                    MBProgressHUD.hide(self.view, animated: true)
+                
+                    actInd.stopAnimating()
                 }
                 else
                 {
                     print("Posted Image!")
-//                    MBProgressHUD.hideHUDForView(self.view, animated: true)
+                    
+                    actInd.stopAnimating()
+                    
+                    _ = self.navigationController?.popToRootViewController(animated: true)
+                    
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "tabBarStart")
+                    
+                    self.view.window?.rootViewController = vc
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: Util.postImageNotification), object: nil)
                 }
             })
         }
-        
-        _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
     func displayAlert(_ title: String, message: String) {

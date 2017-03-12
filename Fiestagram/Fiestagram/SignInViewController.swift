@@ -33,7 +33,13 @@ class SignInViewController: UIViewController, UITextFieldDelegate
             if(user != nil)
             {
                 self.setCurrentUsername()
-                self.performSegue(withIdentifier: "loginSegue", sender: self)
+                
+                let alert = UIAlertController(title: "Success!", message: "You have signed in.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction((UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                    self.performSegue(withIdentifier: "loginSegue", sender: self)
+                })))
+                
+                self.present(alert, animated: true, completion: nil)
             }
             else
             {
@@ -68,16 +74,19 @@ class SignInViewController: UIViewController, UITextFieldDelegate
         setCurrentUsername()
         
         newUser["screen_name"] = Util.currentUsername
+        newUser["bio"] = "I'm your bio! Go ahead and edit me!"
         
         newUser.password = passwordTextField.text!
         
         newUser.signUpInBackground { (success: Bool, error: Error?) in
             if(success)
             {
-                let successString : String = "You now have an account."
+                let alert = UIAlertController(title: "Success!", message: "You now have an account.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction((UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                    self.performSegue(withIdentifier: "loginSegue", sender: self)
+                })))
                 
-                self.displayAlert("Success!", message: successString)
-                self.performSegue(withIdentifier: "loginSegue", sender: self)
+                self.present(alert, animated: true, completion: nil)
             }
             else
             {

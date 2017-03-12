@@ -8,4 +8,5 @@ target 'Fiestagram' do
   # Pods for Fiestagram
     pod 'Parse'
     pod 'SAConfettiView', :git => 'https://github.com/gokhanakkurt/SAConfettiView', :branch => 'swift3'
+    pod 'NVActivityIndicatorView', '~>3.0'
 end
