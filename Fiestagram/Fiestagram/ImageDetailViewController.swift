@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import SAConfettiView
 
 class ImageDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
@@ -17,13 +18,19 @@ class ImageDetailViewController: UIViewController, UITableViewDelegate, UITableV
     var likesCount : Int = 0
     var caption : String?
     var date : Date?
+    var profileImage : PFFile!
     
+    var post : PFObject!
+    
+    var confettiView = SAConfettiView()
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
 
+        self.confettiView = SAConfettiView(frame: self.view.bounds)
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
@@ -81,6 +88,9 @@ class ImageDetailViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         cell.likesCountLabel.text = "\(self.likesCount) likes"
+        cell.likeBtn.addTarget(self, action: #selector(likeClicked(_:)), for: .touchUpInside)
+        cell.likeBtn.indexPath = indexPath
+        cell.likeBtn.liked = false
         
         if(self.username != nil)
         {
@@ -92,23 +102,69 @@ class ImageDetailViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
+    func likeClicked(_ sender: Any)
+    {
+        let button = sender as! LikeButton
+        
+        let cell = tableView.cellForRow(at: (button.indexPath)) as! TimeLineCell
+        
+        var currentLikes = self.post["likesCount"] as? Int
+        
+        self.confettiView.alpha = 1
+        if(!(button.liked))
+        {
+            self.view.addSubview(confettiView)
+            self.confettiView.startConfetti()
+            cell.likeBtn.tintColor = UIColor.red
+            cell.likeBtn.setImage(UIImage(named: "Like Filled-50"), for: .normal)
+            cell.likeBtn.liked = true
+            
+            (currentLikes!) += 1
+        }
+        else
+        {
+            cell.likeBtn.tintColor = UIColor.myFiestaBackGray
+            cell.likeBtn.setImage(UIImage(named: "Like-50"), for: .normal)
+            cell.likeBtn.liked = false
+            
+            (currentLikes!) -= 1
+        }
+        
+        cell.likesCountLabel.text = "\(currentLikes!) likes"
+        self.post["likesCount"] = currentLikes!
+        
+        self.post.saveInBackground()
+        
+        UIView.animate(withDuration: 1.7, animations: {
+            self.confettiView.alpha = 0
+        }) { (completion: Bool) in
+            self.confettiView.stopConfetti()
+            self.confettiView.removeFromSuperview()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
         let header = tableView.dequeueReusableCell(withIdentifier: "header") as! HeaderCell
         
-        //        let author = posts[section]["author"] as? PFUser
-        //        let profileImage = author?["profile_image"] as? PFFile
-        //
-        //        if(profileImage != nil)
-        //        {
-        //            profileImage?.getDataInBackground(block: { (data: Data?, error: Error?) in
-        //                if(error != nil)
-        //                {
-        //                    let image = UIImage(data: data!)
-        //                    header.avatarImageView.image = image
-        //                }
-        //            })
-        //        }
+        if(profileImage != nil)
+        {
+            profileImage?.getDataInBackground(block: { (data: Data?, error: Error?) in
+                if(error == nil)
+                {
+                    let image = UIImage(data: data!)
+                    header.avatarImageView.image = image
+                }
+                else
+                {
+                    header.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+                }
+            })
+        }
+        else
+        {
+            header.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+        }
         
         if(self.username != nil)
         {

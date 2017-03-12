@@ -91,6 +91,7 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
             let vc = segue.destination as! EditImageViewController
             
             vc.editImage = segueImage
+            vc.originalImage = segueImage
         }
     }
 

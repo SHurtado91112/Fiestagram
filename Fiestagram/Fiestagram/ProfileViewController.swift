@@ -17,11 +17,12 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
     var userPost: PFObject!
     
     var otherUserName = ""
+    var otherScreenName = ""
     var selfProfile = true
     
     var recog = UITapGestureRecognizer()
     
-    let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballGridBeat, color: UIColor.myInstaRedViolet, padding: 0.0)
+    let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballRotateChase, color: UIColor.myInstaRedViolet, padding: 0.0)
 
     
     @IBOutlet weak var moreBtn: UIBarButtonItem!
@@ -38,6 +39,8 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 24, weight: UIFontWeightLight)]
         
         self.uploadLabel.isHidden = true
         self.taglineTextView.isUserInteractionEnabled = false
@@ -57,13 +60,17 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
             self.avatarImageView.isUserInteractionEnabled = true
             self.avatarImageView.addGestureRecognizer(self.recog)
         }
+        else
+        {
+            self.moreBtn.isEnabled = false
+        }
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         
         self.actInd.frame = CGRect(x: 0, y: 0, width: self.view.frame.width/2, height: self.view.frame.width/2)
         
-        self.actInd.center = self.view.center
+        self.actInd.center = self.collectionView.center
         
         self.actInd.stopAnimating()
         
@@ -86,7 +93,7 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
         
         if(selfProfile)
         {
-            query.whereKey("username", equalTo: Util.currentUsername)
+            query.whereKey("username", equalTo: PFUser.current()!.username!)
         }
         else
         {
@@ -165,36 +172,58 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
         }
         else
         {
-            self.nameLabel.text = self.otherUserName
+            self.nameLabel.text = self.otherScreenName
             
-            let author = userPost["author"] as! PFObject
+            let author = userPost["author"] as! PFUser
             
-            if(author["profile_image"] != nil)
-            {
-                let imageFile = author["profile_image"] as! PFFile
-                imageFile.getDataInBackground(block: { (data: Data?, error: Error?) in
-                    if(error != nil)
+            print(author.objectId!)
+            let query = PFUser.query()
+            query?.limit = 20
+            query?.whereKey("username", equalTo: userPost["username"])
+            
+            query?.getFirstObjectInBackground { queryUser, error in
+                
+                print("in query")
+                print(query!)
+                if error == nil
+                {
+                    print(queryUser!)
+                    //                var userVariable = newUser.objectId as String
+                    print(queryUser!["profile_image"])
+                    if(queryUser!["profile_image"] != nil)
                     {
-                        let image = UIImage(data: data!)
-                        self.avatarImageView.image = image
+                        let profileImage = queryUser!["profile_image"] as! PFFile
+                        
+                        profileImage.getDataInBackground(block: { (data: Data?, error: Error?) in
+                            if(error == nil)
+                            {
+                                let image = UIImage(data: data!)
+                                self.avatarImageView.image = image
+                            }
+                            else
+                            {
+                                self.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+                            }
+                        })
                     }
                     else
                     {
-                        print(error?.localizedDescription)
+                        self.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
                     }
-                })
+                    
+                }
+                else{
+                    print(error?.localizedDescription)
+                    self.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+                }
+                
+                if(queryUser!["bio"] != nil)
+                {
+                    self.taglineTextView.isUserInteractionEnabled = false
+                    self.taglineTextView.text = queryUser!["bio"] as? String
+                }
             }
-            else
-            {
-                self.uploadLabel.isHidden = false
-            }
-            
-            if(author["bio"] != nil)
-            {
-                self.taglineTextView.isUserInteractionEnabled = false
-                self.taglineTextView.text = author["bio"] as? String
-            }
-        }
+    }
         
         
     }
@@ -300,9 +329,7 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
     // MARK: - Upload Profile Picture
     
     func avatarUpload(_ sender: Any?)
-    {
-        print("In here boi")
-        
+    {   
         let vc = UIImagePickerController()
         vc.delegate = self
         vc.allowsEditing = true
@@ -327,6 +354,8 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
         user!["profile_image"] = Post.getPFFileFromImage(image: editedImage)
         
         self.uploadLabel.isHidden = true
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: Util.userDidUpdateImage), object: nil)
         
         user?.saveInBackground(block: { (success: Bool, error: Error?) in
             if(!success)
@@ -397,23 +426,31 @@ class ProfileViewController: UIViewController, UIPopoverPresentationControllerDe
                 let index = (self.posts.count-1) - indexPath.row
                 
                 let post = posts[index]
+//                let author = post["author"] as! PFObject
                 vc.username = Util.currentUsername
                 vc.caption = post["caption"] as? String
                 vc.likesCount = post["likesCount"] as! Int
                 vc.imageFile = post["media"] as! PFFile
-                vc.date = post["_created_at"] as? Date
+                vc.date = post.createdAt
+                
+                vc.post = post
+                
+                vc.profileImage = Post.getPFFileFromImage(image: self.avatarImageView.image)
+                
             }
             else
             {
                 let indexPath = sender as! IndexPath
-                let index = indexPath.row
+                let index = (self.posts.count-1) - indexPath.row
                 
                 let post = posts[index]
-                vc.username = self.otherUserName
+//                let author = post["author"] as! PFObject
+                vc.username = self.otherScreenName
                 vc.caption = post["caption"] as? String
                 vc.likesCount = post["likesCount"] as! Int
                 vc.imageFile = post["media"] as! PFFile
                 vc.date = post.createdAt
+                vc.profileImage = Post.getPFFileFromImage(image: self.avatarImageView.image)
             }
             
         }

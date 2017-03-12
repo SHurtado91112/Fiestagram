@@ -56,13 +56,21 @@ class SignInViewController: UIViewController, UITextFieldDelegate
     {
         let text = self.usernameTextField.text!
         
-        let range: Range<String.Index> = text.range(of: "@")!
+        if let range: Range<String.Index> = text.range(of: "@")
+        {
+            let range2: Range<String.Index> = Range(uncheckedBounds: (lower: text.startIndex, upper: range.lowerBound))
+            
+            Util.currentUsername = text.substring(with: range2)
+            
+            print("Current User: \(Util.currentUsername)")
+        }
+        else
+        {
+            Util.currentUsername = text
+        }
         
-        let range2: Range<String.Index> = Range(uncheckedBounds: (lower: text.startIndex, upper: range.lowerBound))
         
-        Util.currentUsername = text.substring(with: range2)
         
-        print("Current User: \(Util.currentUsername)")
     }
     
     @IBAction func signUpPressed(_ sender: Any)
@@ -75,6 +83,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate
         
         newUser["screen_name"] = Util.currentUsername
         newUser["bio"] = "I'm your bio! Go ahead and edit me!"
+        newUser["profile_image"] = Post.getPFFileFromImage(image: UIImage(named: "Gender Neutral User-50"))
         
         newUser.password = passwordTextField.text!
         

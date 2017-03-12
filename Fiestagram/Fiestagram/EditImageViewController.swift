@@ -8,12 +8,14 @@
 
 import UIKit
 
-class EditImageViewController: UIViewController, UITextFieldDelegate
+class EditImageViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource
 {
 
     @IBOutlet weak var captionTextField: UITextField!
     
     @IBOutlet weak var editImageView: UIImageView!
+    
+    var originalImage : UIImage = UIImage()
     
     var editPos = CGPoint()
     var capPos = CGPoint()
@@ -27,6 +29,7 @@ class EditImageViewController: UIViewController, UITextFieldDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         self.filterLabel.layer.addBorder(edge: .bottom
             , color: UIColor.myFiestaBackGray, thickness: 1)
         
@@ -37,14 +40,95 @@ class EditImageViewController: UIViewController, UITextFieldDelegate
         
         editImageView.image = editImage
         
+        self.filterCollectionView.delegate = self
+        self.filterCollectionView.dataSource = self
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "filterCell", for: indexPath) as! FilterCell
+        
+        switch(indexPath.row)
+        {
+        case 0:
+            break
+        case 1:
+            cell.filterImage.image = applyFilter(image: cell.filterImage.image!, filterType: "CISepiaTone")
+            break
+        case 2:
+            cell.filterImage.image = applyFilter(image: cell.filterImage.image!, filterType: "CIFalseColor")
+            break
+        case 3:
+            cell.filterImage.image = applyFilter(image: cell.filterImage.image!, filterType: "CIPhotoEffectNoir")
+            break
+        case 4:
+            cell.filterImage.image = applyFilter(image: cell.filterImage.image!, filterType: "CIPhotoEffectProcess")
+            break
+        default:
+            break
+        }
+        
+        return cell
+    }
+    
+    func applyFilter(image: UIImage, filterType: String) -> UIImage
+    {
+        var outputImage = image
+        
+        let openGLContext = EAGLContext(api: .openGLES3)
+        
+        let context = CIContext(eaglContext: openGLContext!)
+        
+        let ciImage = CIImage(cgImage: image.cgImage!)
+        
+        let filter = CIFilter(name: filterType)
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        
+        if(filterType != "CIFalseColor" && filterType != "CIPhotoEffectNoir" && filterType != "CIPhotoEffectProcess")
+        {
+            filter?.setValue(1, forKey: kCIInputIntensityKey)
+        }
+        
+        if let output = filter?.value(forKey: kCIOutputImageKey) as? CIImage
+        {
+            outputImage = UIImage(cgImage: context.createCGImage(output, from: output.extent)!)
+        }
+        
+        return outputImage
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    {
+        switch(indexPath.row)
+        {
+        case 0:
+            self.editImageView.image = self.originalImage
+            break
+        case 1:
+            self.editImageView.image = applyFilter(image: self.originalImage, filterType: "CISepiaTone")
+            break
+        case 2:
+            self.editImageView.image = applyFilter(image: self.originalImage, filterType: "CIFalseColor")
+            break
+        case 3:
+            self.editImageView.image = applyFilter(image: self.originalImage, filterType: "CIPhotoEffectNoir")
+            break
+        case 4:
+            self.editImageView.image = applyFilter(image: self.originalImage, filterType: "CIPhotoEffectProcess")
+            break
+        default:
+            break
+        }
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField)
     {
-        UIView.animate(withDuration: 0.3)
-        {
         
-        }
     }
     
     // MARK: - Text Field
@@ -115,7 +199,7 @@ class EditImageViewController: UIViewController, UITextFieldDelegate
         {
             let vc = segue.destination as! PublishViewController
             
-            vc.publishImage = self.editImage
+            vc.publishImage = self.editImageView.image!
             vc.captionText = self.captionTextField.text!
         }
     }

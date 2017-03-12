@@ -17,6 +17,7 @@ class Util: NSObject
     
     static let logOutNotification = "UserDidLogOut"
     static let postImageNotification = "UserDidPostImage"
+    static let userDidUpdateImage = "UserDidUpdateImage"
     
     class func invokeAlertMethod(_ strTitle: NSString, strBody: NSString, delegate: AnyObject?)
     {
@@ -54,7 +55,9 @@ class Post: NSObject
         // Add relevant fields to the object
         post["media"] = getPFFileFromImage(image: image) // PFFile column type
         post["author"] = PFUser.current()// Pointer column type that points to PFUser
-        post["username"] = Util.currentUsername 
+        post["username"] = PFUser.current()?.username
+        post["screen_name"] = Util.currentUsername
+        post["profile_image"] = PFUser.current()?["profile_image"]
         post["caption"] = caption
         post["likesCount"] = 0
         post["commentsCount"] = 0

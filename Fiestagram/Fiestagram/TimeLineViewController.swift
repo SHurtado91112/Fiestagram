@@ -9,19 +9,26 @@
 import UIKit
 import Parse
 import NVActivityIndicatorView
+import SAConfettiView
 
 class TimeLineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
 
-    var posts : [PFObject]!
+    var posts : [PFObject]?
     
     @IBOutlet weak var tableView: UITableView!
     
-    let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballGridBeat, color: UIColor.myInstaRedViolet, padding: 0.0)
+    let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballRotateChase, color: UIColor.myInstaRedViolet, padding: 0.0)
+    
+    var confettiView = SAConfettiView()
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSFontAttributeName: UIFont(name: "LietoMe", size: 32)!]
+        
+        self.confettiView = SAConfettiView(frame: self.view.bounds)
         
         self.actInd.frame = CGRect(x: 0, y: 0, width: self.view.frame.width/2, height: self.view.frame.width/2)
         
@@ -40,6 +47,11 @@ class TimeLineViewController: UIViewController, UITableViewDelegate, UITableView
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: Util.postImageNotification), object: nil, queue: OperationQueue.main) { (Notification) in
+            
+            self.getQuery()
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: Util.userDidUpdateImage), object: nil, queue: OperationQueue.main) { (Notification) in
             
             self.getQuery()
         }
@@ -114,7 +126,7 @@ class TimeLineViewController: UIViewController, UITableViewDelegate, UITableView
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "instaCell", for: indexPath) as! TimeLineCell
         
-        let post = self.posts![(self.posts.count-1) - indexPath.section]
+        let post = self.posts![((self.posts?.count)!-1) - indexPath.section]
         
         print(post)
         
@@ -144,45 +156,138 @@ class TimeLineViewController: UIViewController, UITableViewDelegate, UITableView
         {
             let likes = post["likesCount"]
             cell.likesCountLabel.text = "\(likes!) likes"
+            cell.likeBtn.addTarget(self, action: #selector(likeClicked(_:)), for: .touchUpInside)
+            cell.likeBtn.indexPath = indexPath
+            cell.likeBtn.liked = false
         }
         
-        if(post["username"] != nil)
+        if(post["screen_name"] != nil)
         {
-            cell.userLabel.text = post["username"] as? String
+            cell.userLabel.text = post["screen_name"] as? String
+            cell.recog.indexPath = indexPath
+            cell.recog.addTarget(self, action: #selector(labelClicked(_:)))
         }
-        
-        
         
         return cell
 
+    }
+    
+    func labelClicked(_ sender: Any)
+    {
+        let recog = sender as! CustomTapRecognizer
+    
+        let indexPath = recog.indexPath
+        
+        print("Tapped Label")
+        
+        self.performSegue(withIdentifier: "profileSegue", sender: indexPath)
+    }
+    
+    func likeClicked(_ sender: Any)
+    {
+        let button = sender as! LikeButton
+        
+        let cell = tableView.cellForRow(at: (button.indexPath)) as! TimeLineCell
+        
+        let post = self.posts![((self.posts?.count)!-1) - button.indexPath.section]
+        
+        var currentLikes = post["likesCount"] as? Int
+        
+        self.confettiView.alpha = 1
+        if(!(button.liked))
+        {
+            self.view.addSubview(confettiView)
+            self.confettiView.startConfetti()
+            cell.likeBtn.tintColor = UIColor.red
+            cell.likeBtn.setImage(UIImage(named: "Like Filled-50"), for: .normal)
+            cell.likeBtn.liked = true
+            
+            (currentLikes!) += 1
+        }
+        else
+        {
+            cell.likeBtn.tintColor = UIColor.myFiestaBackGray
+            cell.likeBtn.setImage(UIImage(named: "Like-50"), for: .normal)
+            cell.likeBtn.liked = false
+            
+            (currentLikes!) -= 1
+        }
+        
+        cell.likesCountLabel.text = "\(currentLikes!) likes"
+        post["likesCount"] = currentLikes!
+        
+        post.saveInBackground()
+        
+        UIView.animate(withDuration: 1.7, animations: {
+            self.confettiView.alpha = 0
+        }) { (completion: Bool) in
+            self.confettiView.stopConfetti()
+            self.confettiView.removeFromSuperview()
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
         let header = tableView.dequeueReusableCell(withIdentifier: "header") as! HeaderCell
         
-//        let author = posts[section]["author"] as? PFUser
-//        let profileImage = author?["profile_image"] as? PFFile
-//        
-//        if(profileImage != nil)
-//        {
-//            profileImage?.getDataInBackground(block: { (data: Data?, error: Error?) in
-//                if(error != nil)
-//                {
-//                    let image = UIImage(data: data!)
-//                    header.avatarImageView.image = image
-//                }
-//            })
-//        }
+        let indece = ((self.posts?.count)!-1) - section
         
-        let username = self.posts?[(self.posts.count-1) - section]["username"] as? String
+        let post = self.posts![indece]
+        
+        let author = post["author"] as! PFUser
+        
+        print(author.objectId!)
+        let query = PFUser.query()
+        query?.limit = 20
+        query?.whereKey("username", equalTo: post["username"])
+        
+        query?.getFirstObjectInBackground { queryUser, error in
+            
+            print("in query")
+            print(query!)
+            if error == nil
+            {
+                print(queryUser!)
+//                var userVariable = newUser.objectId as String
+                print(queryUser!["profile_image"])
+                if(queryUser!["profile_image"] != nil)
+                {
+                    let profileImage = queryUser!["profile_image"] as! PFFile
+                    
+                    profileImage.getDataInBackground(block: { (data: Data?, error: Error?) in
+                        if(error == nil)
+                        {
+                            let image = UIImage(data: data!)
+                            header.avatarImageView.image = image
+                        }
+                        else
+                        {
+                            header.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+                        }
+                    })
+                }
+                else
+                {
+                    header.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+                }
+
+            }
+            else{
+                print(error?.localizedDescription)
+                header.avatarImageView.image = UIImage(named: "Gender Neutral User-50")
+            }
+        }
+        
+        let username = self.posts?[((self.posts?.count)!-1) - section]["screen_name"] as? String
         
         if(username != nil)
         {
             header.nameLabel.text = username
+            header.recog.addTarget(self, action: #selector(labelClicked(_:)))
+            header.recog.indexPath = IndexPath(row: 0, section: section)
         }
         
-        let date = posts?[(self.posts.count-1) - section].createdAt
+        let date = posts?[((self.posts?.count)!-1) - section].createdAt
         
         if(date != nil)
         {
@@ -241,14 +346,24 @@ class TimeLineViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if(segue.identifier == "profileSegue")
+        {
+            let vc = segue.destination as! ProfileViewController
+            
+            let indexPath = sender as! IndexPath
+            
+            let post = posts?[((self.posts?.count)!-1) - indexPath.section]
+            
+            vc.selfProfile = false
+            vc.otherScreenName = (post?["screen_name"] as? String)!
+            vc.otherUserName = (post?["username"] as? String)!
+            vc.userPost = post
+        }
     }
-    */
 
 }

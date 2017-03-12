@@ -37,7 +37,7 @@ class PublishViewController: UIViewController
     @IBAction func publishPressed(_ sender: Any)
     {
         
-        let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballGridBeat, color: UIColor.myInstaRedViolet, padding: 0.0)
+        let actInd = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 200, height: 200), type: NVActivityIndicatorType.ballRotateChase, color: UIColor.myInstaRedViolet, padding: 0.0)
         
         
         actInd.frame = CGRect(x: 0, y: 0, width: self.view.frame.width/2, height: self.view.frame.width/2)

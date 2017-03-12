@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class HeaderCell: UITableViewCell
 {
@@ -18,9 +19,14 @@ class HeaderCell: UITableViewCell
     
     @IBOutlet weak var nameLabel: UILabel!
     
+    let recog = CustomTapRecognizer()
+    
     override func awakeFromNib()
     {
         super.awakeFromNib()
+        
+        self.nameLabel.addGestureRecognizer(recog)
+        self.nameLabel.isUserInteractionEnabled = true
         
         avatarImageView.layer.cornerRadius = avatarImageView.frame.size.width / 2
         avatarImageView.clipsToBounds = true
