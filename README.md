@@ -1,5 +1,6 @@
 # Project 6 - *Fiestagram*
 ![fiestagram_logo small](https://cloud.githubusercontent.com/assets/11231583/23840925/ada50bd2-077f-11e7-9a20-d32d0f1c046d.png)
+
 **Fiestagram** is a photo sharing app using Parse as its backend.
 No real party inside. Simply an Instagram clone. With lots of confetti.
 
